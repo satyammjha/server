@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const addUser = async (req: Request, res: Response) => {
+export const addUser = async (req: Request, res: Response) => {
   console.log("Request received:", req.body);
   try {
     const { name, email, password, username } = req.body;
@@ -36,4 +37,20 @@ const addUser = async (req: Request, res: Response) => {
   }
 };
 
-export default addUser;
+export const signin = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  const user = await User.findOne({ username });
+  if (!user) {
+    res.status(400).json({ message: "User not found" });
+  }
+  const isPasswordTrue = bcrypt.compare(password, user.password);
+  if (!isPasswordTrue) {
+    res.status(400).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, {
+    expiresIn: "1h",
+  });
+  res.status(200).json({ message: "Login successful", token });
+};2
