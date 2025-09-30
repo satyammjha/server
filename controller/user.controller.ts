@@ -38,19 +38,48 @@ export const addUser = async (req: Request, res: Response) => {
 };
 
 export const signin = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  const user = await User.findOne({ username });
-  if (!user) {
-    res.status(400).json({ message: "User not found" });
-  }
-  const isPasswordTrue = bcrypt.compare(password, user.password);
-  if (!isPasswordTrue) {
-    res.status(400).json({ message: "Invalid credentials" });
-  }
+    const user = await User.findOne({ username });
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, {
-    expiresIn: "1h",
-  });
-  res.status(200).json({ message: "Login successful", token });
-};2
+    if (!user) {
+      res.status(400).json({ message: "User not found" });
+      return;
+    }
+
+    const isPasswordTrue = bcrypt.compare(password, user.password);
+    if (!isPasswordTrue) {
+      res.status(400).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const token = jwt.sign(
+      { id: user?._id },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.status(200).json({ message: "Login successful", token });
+  } catch (err) {
+    return res.status(500).json({ message: (err as Error).message });
+  }
+};
+
+export const getProfile = async (req: Request, res: Response) => {
+  try {
+   const userId = (req as any).userId;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (err) {
+    return res.status(500).json({ message: (err as Error).message });
+  }
+};
