@@ -3,8 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+   "scripts": {
+    "dev": "bun run --watch index.js"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/multer": "^2.0.0",
+    "@types/pdfjs-dist": "^2.10.377"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -14,7 +19,11 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "mammoth": "^1.11.0",
     "mongoose": "^8.18.2",
-    "nodemon": "^3.1.10"
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.10",
+    "pdf-parse": "^2.1.7",
+    "pdfjs-dist": "^5.4.296"
   }
 }
