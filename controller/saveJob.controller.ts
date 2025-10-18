@@ -2,6 +2,7 @@ import { SavedJobModel } from "../models/SavedJobs.model";
 import type { Request, Response } from "express";
 import User from "../models/user.model";
 import JobModel from "../models/Jobs.schema";
+import mongoose from "mongoose";
 
 export const getAllJobs = async (req: Request, res: Response) => {
   try {
@@ -51,20 +52,33 @@ export const getSavedJobs = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     if (!userId) {
-      res.status(400).json({ message: "UserId is required" });
-      return;
+      return res.status(400).json({ message: "UserId is required" });
     }
-    const savedJobs = await SavedJobModel.find({ userId });
-    if (!savedJobs) {
-      res.status(404).json({ message: "No saved jobs found" });
-      return;
+
+    const savedJobs = await SavedJobModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "jobDetails"
+        }
+      },
+
+      { $unwind: "$jobDetails" },
+      { $sort: { savedAt: -1 } },
+    ]);
+    if (!savedJobs?.length) {
+      return res.status(404).json({ message: "No saved jobs found" });
     }
-    if (savedJobs.length === 0) {
-      res.status(404).json({ message: "No saved jobs found" });
-      return;
-    }
-    res.status(200).json({ count: savedJobs.length, savedJobs });
+    res.status(200).json({
+      count: savedJobs.length,
+      savedJobs
+    });
   } catch (err) {
+    console.error("Error in getSavedJobs:", err);
     res.status(500).json({ message: (err as Error).message });
   }
 };
