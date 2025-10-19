@@ -1,10 +1,10 @@
 import { createBullBoard } from "bull-board";
-import { BullAdapter } from "bull-board/bullAdapter.js";
+import { BullMQAdapter } from "bull-board/bullMQAdapter.js";
 import express from "express";
 import resumeQueue from "./queue";
 
 const { router } = createBullBoard([
-    new BullAdapter(resumeQueue)
+    new BullMQAdapter(resumeQueue)
 ]);
 
 export default router;
