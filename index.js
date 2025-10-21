@@ -12,11 +12,9 @@ app.use(express.json());
 app.use(cors());
 connectToDb();
 
-app.get('/', (req, res) => {
-    console.log("Hello World");
-})
 app.use('/', route);
 app.use('/queue', bullBoardRouter);
+
 app.listen(3000, () => {
     console.log(`Server is running on ${process.env.PORT}`);
 });
