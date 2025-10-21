@@ -1,6 +1,17 @@
 import { SavedJobModel } from "../models/SavedJobs.model";
 import type { Request, Response } from "express";
 import User from "../models/user.model";
+import JobModel from "../models/Jobs.schema";
+
+export const getAllJobs = async (req: Request, res: Response) => {
+  try {
+    const allJobs = await JobModel.find({});
+    res.status(200).json({ count: allJobs.length, allJobs });
+  }
+  catch (err) {
+    res.status(500).json({ message: (err as Error).message });
+  }
+}
 
 export const saveJob = async (req: Request, res: Response) => {
   try {
@@ -87,3 +98,22 @@ export const deleteSavedJobs = async (req: Request, res: Response) => {
     res.status(500).json({ message: (err as Error).message });
   }
 };
+
+export const updateJobStatus = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+    const { jobId, status } = req.body;
+    if (!userId || !jobId || !status) {
+      return res.status(400).json({ message: "userId, jobId and status are required" });
+    }
+    const savedJob = await SavedJobModel.findOne({ userId, jobId });
+    if (!savedJob) {
+      return res.status(404).json({ message: "Saved job not found" });
+    }
+    savedJob.status = status;
+    await savedJob.save();
+    res.status(200).json({ message: "Job status updated successfully", savedJob });
+  } catch (err) {
+    res.status(500).json({ message: (err as Error).message });
+  }
+}

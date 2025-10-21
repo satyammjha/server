@@ -8,7 +8,11 @@ const SavedJobSchema = new mongoose.Schema(
       required: true,
     },
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
+    status: { type: String, default: 'saved' },
+    aiScore: Number,
+    comment: String,
   },
+
   { timestamps: true }
 );
 

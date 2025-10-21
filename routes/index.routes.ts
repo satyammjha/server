@@ -1,6 +1,6 @@
 import express from "express";
 import userRoute from "./user.routes";
-import jobRoute from "./saveJob.routes";
+import jobRoute from "./jobs.routes";
 import resumeRoute from "./resume.routes";
 const route = express.Router();
 
