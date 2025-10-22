@@ -69,7 +69,7 @@ export const signin = async (req: Request, res: Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
-   const userId = (req as any).userId;
+    const userId = (req as any).userId;
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }

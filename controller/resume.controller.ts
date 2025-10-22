@@ -3,6 +3,8 @@ import User from "../models/user.model";
 import { extractText } from "../utils/fileParser";
 import resumeQueue from "../queue/queue";
 import ResumeDump from "../models/resumeDump.model";
+import ResumeReviewModel from "../models/resumeReview.models";
+import mongoose from "mongoose";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
@@ -25,6 +27,15 @@ const resumeReview = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const aiCredits = (user as any).aiCredits;
+
+    if (typeof aiCredits !== "number") {
+      return res.status(500).json({ message: "Invalid user data: aiCredits missing or invalid" });
+    }
+
+    if (aiCredits < 20) {
+      return res.status(403).json({ message: "Insufficient AI credits" });
+    }
     const tempDir = path.join(os.tmpdir(), 'resume-uploads');
     await fs.mkdir(tempDir, { recursive: true });
 
@@ -81,4 +92,27 @@ const resumeReview = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-export { resumeReview };
+const getResume = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+    console.log("Fetching resume for userId:", userId);
+
+    const user = await User.findById({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const resumeReview = await ResumeReviewModel.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+
+    if (!resumeReview) {
+      return res.status(404).json({ message: "Resume review not found" });
+    }
+
+    res.status(200).json({ resumeReview });
+  } catch (error) {
+
+  }
+}
+export { resumeReview, getResume };
