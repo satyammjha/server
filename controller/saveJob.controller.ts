@@ -68,7 +68,7 @@ export const getSavedJobs = async (req: Request, res: Response) => {
       },
 
       { $unwind: "$jobDetails" },
-      { $sort: { savedAt: -1 } },
+      { $sort: { updatedAt: -1 } },
     ]);
     if (!savedJobs?.length) {
       return res.status(404).json({ message: "No saved jobs found" });
@@ -86,29 +86,70 @@ export const getSavedJobs = async (req: Request, res: Response) => {
 export const deleteSavedJobs = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
-    const { jobIds } = req.body;
-    console.log("Deleting jobs for user:", userId, "with jobIds:", jobIds);
+    let { jobIds } = req.body;
+
+    console.log("🟡 [DELETE] Request received to delete saved jobs");
+    console.log("➡️ User ID:", userId);
+    console.log("➡️ Job IDs from body:", jobIds);
+
+    // Normalize jobIds to an array
+    if (!Array.isArray(jobIds)) {
+      console.log("ℹ️ jobIds is not an array. Converting to array...");
+      jobIds = [jobIds];
+    }
+
     if (!userId || !Array.isArray(jobIds) || jobIds.length === 0) {
+      console.error("❌ Missing userId or empty jobIds array");
       return res
         .status(400)
         .json({ message: "UserId and jobIds array are required" });
     }
 
+    console.log("🔍 Checking if user exists...");
     const user = await User.findById(userId);
+
     if (!user) {
+      console.error("❌ User not found in DB:", userId);
       return res.status(404).json({ message: "User not found" });
     }
 
+    console.log("🗑️ Attempting to delete jobs...");
     const result = await SavedJobModel.deleteMany({
       userId,
       jobId: { $in: jobIds },
     });
 
+    console.log("✅ Delete operation completed");
+    console.log("➡️ Matched Count (approx):", jobIds.length);
+    console.log("➡️ Deleted Count:", result.deletedCount);
+
+    if (result.deletedCount === 0) {
+      console.warn("⚠️ No jobs were deleted. Possible invalid jobIds or already removed.");
+    }
+    const allSavedJobs = await SavedJobModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "jobDetails"
+        }
+      },
+      { $unwind: "$jobDetails" },
+      { $sort: { updatedAt: -1 } },
+    ]);
+
     res.status(200).json({
       count: result.deletedCount,
-      message: `${result.deletedCount} job(s) deleted successfully`,
+      allSavedJobs,
+      message:
+        result.deletedCount > 0
+          ? `${result.deletedCount} job(s) deleted successfully`
+          : "No matching saved jobs found to delete",
     });
   } catch (err) {
+    console.error("🔥 Error while deleting saved jobs:", err);
     res.status(500).json({ message: (err as Error).message });
   }
 };
@@ -126,8 +167,54 @@ export const updateJobStatus = async (req: Request, res: Response) => {
     }
     savedJob.status = status;
     await savedJob.save();
-    res.status(200).json({ message: "Job status updated successfully", savedJob });
+    const allSavedJobs = await SavedJobModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "jobDetails"
+        }
+      },
+      { $unwind: "$jobDetails" },
+      { $sort: { updatedAt: -1 } },
+    ]);
+    res.status(200).json({ message: "Job status updated successfully", allSavedJobs });
   } catch (err) {
+    res.status(500).json({ message: (err as Error).message });
+  }
+}
+
+export const saveJobNotes = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+    const { jobId, notes } = req.body;
+
+    const savedJob = await SavedJobModel.findOne({ userId, jobId });
+    if (!savedJob) {
+      return res.status(404).json({ message: "Saved job not found" });
+    }
+    savedJob.comment = notes;
+    await savedJob.save();
+    const allSavedJobs = await SavedJobModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "jobDetails"
+        }
+      },
+      { $unwind: "$jobDetails" },
+      { $sort: { updatedAt: -1 } },
+    ]);
+    res.status(200).json({ message: "Notes saved successfully", allSavedJobs });
+
+
+  } catch (err) {
+    console.log("Error in saving notes for job", err);
     res.status(500).json({ message: (err as Error).message });
   }
 }
