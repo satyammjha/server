@@ -48,7 +48,10 @@ export const signin = async (req: Request, res: Response) => {
       return;
     }
 
-    const isPasswordTrue = bcrypt.compare(password, user.password);
+    const isPasswordTrue = await bcrypt.compare(
+      String(password),
+      String((user as any).password)
+    );
     if (!isPasswordTrue) {
       res.status(400).json({ message: "Invalid credentials" });
       return;

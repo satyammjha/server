@@ -14,7 +14,11 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
       throw new Error("JWT_SECRET is not defined");
     }
 
-    const decoded = Jwt.verify(token, secret) as JwtPayload & { id?: string };
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const decoded = Jwt.verify(token, secret!) as JwtPayload & { id?: string };
 
     if (!decoded.id) {
       return res.status(401).json({ message: "Invalid token payload" });
