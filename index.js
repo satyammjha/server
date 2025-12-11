@@ -13,6 +13,9 @@ app.use(cors());
 connectToDb();
 
 app.use('/', route);
+app.get('/health', (req, res)=>{
+res.status(200).json({message:"zend is running fine"});
+});
 app.use('/queue', bullBoardRouter);
 
 app.listen(3000, () => {
