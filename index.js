@@ -3,7 +3,6 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connectToDb from './utils/db.js'
 import route from './routes/index.routes'
-import bullBoardRouter from "./queue/bullboard.js"
 
 
 dotenv.config();
@@ -13,8 +12,8 @@ app.use(cors());
 connectToDb();
 
 app.use('/', route);
-app.get('/health', (req, res)=>{
-res.status(200).json({message:"zend is running fine"});
+app.get('/health', (req, res) => {
+    res.status(200).json({ message: "zend is running fine" });
 });
 app.use('/queue', bullBoardRouter);
 
