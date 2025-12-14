@@ -4,7 +4,7 @@ dotenv.config();
 
 const redisConfig = {
   connection: {
-    host: '13.204.102.186',
+    host: "127.0.0.1",
     port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
     password: 'dollar$babydollar$'
   },

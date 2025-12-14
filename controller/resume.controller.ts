@@ -50,12 +50,10 @@ const resumeReview = async (req: AuthenticatedRequest, res: Response) => {
 
     await fs.writeFile(tempFilePath, req.file.buffer);
 
-    const parsedText = await extractText({
-      ...req.file,
-      path: tempFilePath,
+    const resumeText = await extractText({
+      buffer: req.file.buffer
     });
 
-    const resumeText = parsedText;
 
     await resumeQueue.add(
       "resumeQueue",
