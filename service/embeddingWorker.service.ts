@@ -7,7 +7,7 @@ import { redisConnection } from "../queue/queue";
 const EMBEDDING_API = "https://embed.zobly.in/embed";
 const API_KEY = '$dollarbabydollar$'
 
-export const jobEmbeddingWorker = new Worker(
+const jobEmbeddingWorker = new Worker(
     "embeddingQueue",
     async (job) => {
         const { jobId } = job.data;
@@ -80,3 +80,5 @@ export const jobEmbeddingWorker = new Worker(
         concurrency: 2,
     }
 );
+
+export default jobEmbeddingWorker

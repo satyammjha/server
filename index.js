@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import connectToDb from './utils/db.js'
 import route from './routes/index.routes'
 import bullBoardRouter from './queue/bullBoard.js'
+import jobEmbeddingWorker from './service/embeddingWorker.service.js'
 
 
 dotenv.config();
