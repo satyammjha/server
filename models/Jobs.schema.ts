@@ -62,6 +62,10 @@ const JobSchema = new mongoose.Schema(
         source_platform: { type: String },
         tags: [{ type: String }],
         is_verified: { type: Boolean, default: false },
+
+        is_embedded: { type: Boolean, default: false, required: false },
+        embedding_queued: { type: Boolean, default: false, required: false },
+        embedded_at: { type: Date, required: false },
     },
     {
         timestamps: true,

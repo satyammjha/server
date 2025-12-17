@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import User from "../models/user.model";
 import { extractText } from "../utils/fileParser";
-import resumeQueue from "../queue/queue";
+import { resumeQueue } from "../queue/queue";
 import ResumeDump from "../models/resumeDump.model";
 import ResumeReviewModel from "../models/resumeReview.models";
 import mongoose from "mongoose";
