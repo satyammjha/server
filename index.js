@@ -16,7 +16,7 @@ connectToDb();
 
 app.use('/', route);
 app.get('/health', (req, res) => {
-    res.status(200).json({ message: "zend is running fine" });
+    res.status(200).json({ message: "z-end is running fine" });
 });
 app.use('/queue', bullBoardRouter);
 
