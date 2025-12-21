@@ -48,7 +48,7 @@ const UserPreferencesSchema = new mongoose.Schema(
         },
 
         location: {
-            type: String,
+            type: [String],
         },
 
         open_to_remote: {

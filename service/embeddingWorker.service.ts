@@ -21,11 +21,9 @@ const jobEmbeddingWorker = new Worker(
         Skills: ${(jobDoc.skills || []).join(", ")}.
         Experience: ${jobDoc.experience_range || ""}.
         Location: ${jobDoc.location_string || ""}.
-        Description: ${jobDoc.description || ""}
-      `
-                .replace(/\s+/g, " ")
+        Type:${(jobDoc.employment_types || []).join(", ")}
+      `.replace(/\s+/g, " ")
                 .trim();
-
             const { data } = await axios.post(
                 EMBEDDING_API,
                 { texts: [jobText] },

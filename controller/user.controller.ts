@@ -105,10 +105,16 @@ export const updatePreference = async (req: Request, res: Response) => {
       open_to_remote,
     } = req.body;
 
+    const normalizedLocation = Array.isArray(location)
+      ? location
+      : location
+        ? [location]
+        : undefined;
+
     console.log("[updatePreference] request body:", {
       skills_manual,
       preferred_roles,
-      location,
+      location: normalizedLocation,
       expected_salary_min,
       expected_salary_max,
       experience_years,
@@ -141,8 +147,8 @@ export const updatePreference = async (req: Request, res: Response) => {
         $set: {
           skills_manual: skills_manual ?? existingPrefs?.skills_manual ?? [],
           merged_skills: mergedSkills,
-          preferred_roles,
-          location,
+          preferred_roles: preferred_roles ?? existingPrefs?.preferred_roles ?? [],
+          location: normalizedLocation ?? existingPrefs?.location ?? [],
           expected_salary_min,
           expected_salary_max,
           experience_years,

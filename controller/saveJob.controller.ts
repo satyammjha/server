@@ -23,7 +23,7 @@ export const getAllJobs = async (req: Request, res: Response) => {
 
     console.log("[getAllJobs] cache MISS");
 
-    const allJobs = await JobModel.find({});
+    const allJobs = await JobModel.find({}).limit(20).lean();
 
     await redis.set(
       CACHE_KEY,
