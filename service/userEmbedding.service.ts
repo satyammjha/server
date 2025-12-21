@@ -1,34 +1,27 @@
 import { Worker } from "bullmq";
 import axios from "axios";
-import JobModel from "../models/Jobs.schema";
-import JobEmbeddingModel from "../models/jobEmbedding.model";
+import UserModel from "../models/user.model";
+import UserEmbeddingModel from "../models/userEmbedding.model";
+import { buildUserEmbeddingText } from "../utils/buildUserEmbeddingPayload";
 import { connection } from "../queue/queue";
 
 const EMBEDDING_API = process.env.EMBEDDING_API || ''
-const API_KEY = '$dollarbabydollar$'
+const API_KEY = "$dollarbabydollar$";
 
-const jobEmbeddingWorker = new Worker(
-    "embeddingQueue",
+const userEmbeddingWorker = new Worker(
+    "userEmbeddingQueue",
     async (job) => {
-        const { jobId } = job.data;
+        const { userId } = job.data;
 
         try {
-            const jobDoc = await JobModel.findById(jobId).lean();
-            if (!jobDoc) throw new Error("Job not found");
+            const user = await UserModel.findById(userId).lean();
+            if (!user) throw new Error("User not found");
 
-            const jobText = `
-        ${jobDoc.job_title}.
-        Skills: ${(jobDoc.skills || []).join(", ")}.
-        Experience: ${jobDoc.experience_range || ""}.
-        Location: ${jobDoc.location_string || ""}.
-        Description: ${jobDoc.description || ""}
-      `
-                .replace(/\s+/g, " ")
-                .trim();
+            const userText = buildUserEmbeddingText(user);
 
             const { data } = await axios.post(
                 EMBEDDING_API,
-                { texts: [jobText] },
+                { texts: [userText] },
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -41,11 +34,11 @@ const jobEmbeddingWorker = new Worker(
             const embedding = data.embeddings?.[0];
             if (!embedding) throw new Error("No embedding returned");
 
-            await JobEmbeddingModel.updateOne(
-                { jobId },
+            await UserEmbeddingModel.updateOne(
+                { userId },
                 {
                     $set: {
-                        jobId,
+                        userId,
                         embedding,
                         model: "all-MiniLM-L6-v2",
                         embedding_version: "minilm-v1",
@@ -54,8 +47,8 @@ const jobEmbeddingWorker = new Worker(
                 { upsert: true }
             );
 
-            await JobModel.updateOne(
-                { _id: jobId },
+            await UserModel.updateOne(
+                { _id: userId },
                 {
                     $set: {
                         is_embedded: true,
@@ -67,18 +60,17 @@ const jobEmbeddingWorker = new Worker(
 
             return true;
         } catch (err) {
-            await JobModel.updateOne(
-                { _id: jobId },
+            await UserModel.updateOne(
+                { _id: userId },
                 { $set: { embedding_queued: false } }
             );
-
             throw err;
         }
     },
     {
-        connection: connection,
+        connection,
         concurrency: 2,
     }
 );
 
-export default jobEmbeddingWorker;
+export default userEmbeddingWorker;

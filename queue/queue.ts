@@ -1,17 +1,22 @@
 import { Queue } from "bullmq";
+import IORedis from "ioredis";
 import dotenv from "dotenv";
+
 dotenv.config();
 
-export const redisConnection = {
-  host: "127.0.0.1",
-  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-  password: "dollar$babydollar$",
-};
+export const connection = new IORedis("rediss://default:AaP-AAIncDE1ZDc4OGZjZTE4MDU0Y2E0ODExNzcxMjBkNmY2MTQzYXAxNDE5ODI@crucial-piglet-41982.upstash.io:6379"
+  , {
+    maxRetriesPerRequest: null,
+  });
 
 export const resumeQueue = new Queue("resumeQueue", {
-  connection: redisConnection,
+  connection,
 });
 
 export const embeddingQueue = new Queue("embeddingQueue", {
-  connection: redisConnection,
+  connection,
+});
+
+export const userEmbeddingQueue = new Queue("userEmbeddingQueue", {
+  connection,
 });
