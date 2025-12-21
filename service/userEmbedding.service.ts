@@ -3,7 +3,7 @@ import axios from "axios";
 import UserModel from "../models/user.model";
 import UserEmbeddingModel from "../models/userEmbedding.model";
 import { buildUserEmbeddingText } from "../utils/buildUserEmbeddingPayload";
-import { connection } from "../queue/queue";
+import { redis } from "../queue/queue";
 
 const EMBEDDING_API = process.env.EMBEDDING_API || ''
 const API_KEY = "$dollarbabydollar$";
@@ -68,7 +68,7 @@ const userEmbeddingWorker = new Worker(
         }
     },
     {
-        connection,
+        connection: redis,
         concurrency: 2,
     }
 );

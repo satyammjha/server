@@ -3,16 +3,48 @@ import type { Request, Response } from "express";
 import User from "../models/user.model";
 import JobModel from "../models/Jobs.schema";
 import mongoose from "mongoose";
+import { redis } from '../queue/queue'
 
 export const getAllJobs = async (req: Request, res: Response) => {
   try {
+    const CACHE_KEY = "all_jobs:v1";
+    const CACHE_TTL = 600;
+
+    const cachedJobs = await redis.get(CACHE_KEY);
+    if (cachedJobs) {
+      console.log("[getAllJobs] cache HIT");
+      const jobs = JSON.parse(cachedJobs);
+      return res.status(200).json({
+        count: jobs.length,
+        allJobs: jobs,
+        source: "cache",
+      });
+    }
+
+    console.log("[getAllJobs] cache MISS");
+
     const allJobs = await JobModel.find({});
-    res.status(200).json({ count: allJobs.length, allJobs });
+
+    await redis.set(
+      CACHE_KEY,
+      JSON.stringify(allJobs),
+      "EX",
+      CACHE_TTL
+    );
+
+    return res.status(200).json({
+      count: allJobs.length,
+      allJobs,
+      source: "db",
+    });
+  } catch (err) {
+    console.error("[getAllJobs] error:", err);
+    return res.status(500).json({
+      message: (err as Error).message,
+    });
   }
-  catch (err) {
-    res.status(500).json({ message: (err as Error).message });
-  }
-}
+};
+
 
 export const saveJob = async (req: Request, res: Response) => {
   try {
@@ -92,7 +124,6 @@ export const deleteSavedJobs = async (req: Request, res: Response) => {
     console.log("➡️ User ID:", userId);
     console.log("➡️ Job IDs from body:", jobIds);
 
-    // Normalize jobIds to an array
     if (!Array.isArray(jobIds)) {
       console.log("ℹ️ jobIds is not an array. Converting to array...");
       jobIds = [jobIds];

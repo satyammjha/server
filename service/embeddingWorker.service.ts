@@ -2,7 +2,7 @@ import { Worker } from "bullmq";
 import axios from "axios";
 import JobModel from "../models/Jobs.schema";
 import JobEmbeddingModel from "../models/jobEmbedding.model";
-import { connection } from "../queue/queue";
+import { redis } from "../queue/queue";
 
 const EMBEDDING_API = process.env.EMBEDDING_API || ''
 const API_KEY = '$dollarbabydollar$'
@@ -76,7 +76,7 @@ const jobEmbeddingWorker = new Worker(
         }
     },
     {
-        connection: connection,
+        connection: redis,
         concurrency: 2,
     }
 );
