@@ -7,7 +7,7 @@ import embedRoutes from "./embed.routes";
 const route = express.Router();
 
 route.get("/health", (req, res) => {
-    res.status(200).send("API is healthy");
+    res.status(200).json({ message: "server is healthy" });
 })
 route.use("/user", userRoute);
 route.use("/jobs", jobRoute);
