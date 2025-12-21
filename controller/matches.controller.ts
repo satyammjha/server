@@ -18,15 +18,7 @@ export const getJobMatches = async (req: Request, res: Response) => {
         const userVector = userEmbeddingDoc.embedding;
 
         const jobs = await JobModel.find(
-            { is_active: true },
-            {
-                title: 1,
-                company: 1,
-                location: 1,
-                skills: 1,
-                experience_range: 1,
-                job_type: 1,
-            }
+            { is_active: true }
         ).lean();
 
         if (!jobs.length) {
