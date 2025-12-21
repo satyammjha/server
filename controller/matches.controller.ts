@@ -18,28 +18,43 @@ export const getJobMatches = async (req: Request, res: Response) => {
         const userVector = userEmbeddingDoc.embedding;
 
         const jobs = await JobModel.find(
-            { is_active: true }
+            { is_active: true },
+            {
+                title: 1,
+                company: 1,
+                location: 1,
+                skills: 1,
+                experience_range: 1,
+                job_type: 1,
+            }
         ).lean();
-        console.log("jobs", jobs);
+
         if (!jobs.length) {
-            return res.status(200).json({ matches: [] });
+            return res.status(200).json({ count: 0, matches: [] });
         }
 
-        const jobIds = jobs.map(j => j._id);
+        const jobMap = new Map(
+            jobs.map(job => [job._id.toString(), job])
+        );
+
+        const jobIds = jobs.map(job => job._id);
 
         const jobEmbeddings = await JobEmbeddingModel.find({
             jobId: { $in: jobIds },
         }).lean();
 
-        const scoredJobs = jobEmbeddings.map(job => {
-            const score = cosineSimilarity(userVector, job.embedding);
+        const scoredJobs = jobEmbeddings.map(jobEmbed => {
+            const score = cosineSimilarity(userVector, jobEmbed.embedding);
+            const jobData = jobMap.get(jobEmbed.jobId.toString());
+
             return {
-                jobId: job.jobId,
+                job: jobData,
                 score,
             };
         });
 
         const topMatches = scoredJobs
+            .filter(item => item.job)
             .sort((a, b) => b.score - a.score)
             .slice(0, 30);
 
