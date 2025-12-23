@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const redis = new IORedis(process.env.REDIS_URL!, {
+export const redis = new IORedis({
+  host: process.env.REDIS_HOST || "127.0.0.1",
+  port: Number(process.env.REDIS_PORT) || 6379,
   maxRetriesPerRequest: null,
 });
 

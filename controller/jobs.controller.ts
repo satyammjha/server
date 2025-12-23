@@ -19,7 +19,6 @@ export const getJobsForDashboard = async (
     res: Response
 ) => {
     try {
-        // 1. Destructure Query Parameters
         const {
             page = "1",
             limit = "10",
