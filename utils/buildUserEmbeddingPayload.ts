@@ -1,9 +1,52 @@
-export function buildUserEmbeddingText(user: any) {
-  return `
-    Skills: ${(user.skills || []).join(", ")}
-    Preferred Roles: ${(user.preferred_roles || []).join(", ")}
-    Location: ${user.location?.join?.(", ") || ""}
-  `
-    .replace(/\s+/g, " ")
-    .trim();
+export function buildUserEmbeddingText({
+  preferences,
+  resume,
+}: {
+  preferences?: any;
+  resume?: any;
+}) {
+  const parts: string[] = [];
+
+  if (preferences) {
+    if (preferences.skills?.length) {
+      parts.push(`Skills: ${preferences.skills.join(", ")}`);
+    }
+
+    if (preferences.preferred_roles?.length) {
+      parts.push(`Preferred Roles: ${preferences.preferred_roles.join(", ")}`);
+    }
+
+    if (preferences.location?.length) {
+      parts.push(`Location: ${preferences.location.join(", ")}`);
+    }
+  }
+
+  if (resume) {
+    if (resume.skills?.length) {
+      parts.push(`Resume Skills: ${resume.skills.join(", ")}`);
+    }
+
+    if (resume.experience?.yearsOfExperience) {
+      parts.push(`Experience: ${resume.experience.yearsOfExperience} years`);
+    }
+
+    if (resume.experience?.industries?.length) {
+      parts.push(
+        `Industries: ${resume.experience.industries.join(", ")}`
+      );
+    }
+
+    if (resume.strengths?.length) {
+      parts.push(`Strengths: ${resume.strengths.join(", ")}`);
+    }
+
+
+    if (resume.additionalInsights?.careerReadiness) {
+      parts.push(
+        `Career Readiness: ${resume.additionalInsights.careerReadiness}`
+      );
+    }
+  }
+
+  return parts.join(" | ");
 }

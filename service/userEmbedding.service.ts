@@ -4,6 +4,7 @@ import UserModel from "../models/user.model";
 import UserEmbeddingModel from "../models/userEmbedding.model";
 import userPreferencesModel from "../models/userPreferences.model";
 import { buildUserEmbeddingText } from "../utils/buildUserEmbeddingPayload";
+import ResumeReviewModel from "../models/resumeReview.models";
 import { redis } from "../queue/queue";
 
 const EMBEDDING_API = process.env.EMBEDDING_API || "";
@@ -33,9 +34,34 @@ const userEmbeddingWorker = new Worker(
                     preferred_roles: [],
                     location: [],
                 });
+                userPreference = userPreference.toObject();
             }
 
-            const userText = buildUserEmbeddingText(userPreference);
+            const resumeReview = await ResumeReviewModel
+                .findOne({ userId })
+                .sort({ reviewedAt: -1 })
+                .lean();
+
+            const userText = buildUserEmbeddingText({
+                preferences: userPreference,
+                resume: resumeReview,
+            });
+
+            if (!userText || userText.length < 5) {
+                console.warn("⚠️ Skipping embedding: no meaningful data for user:", userId);
+
+                await UserModel.updateOne(
+                    { _id: userId },
+                    {
+                        $set: {
+                            embedding_queued: false,
+                        },
+                    }
+                );
+
+                return true;
+            }
+
 
             console.log("🌐 Calling embedding API...");
             const { data } = await axios.post(
