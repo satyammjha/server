@@ -16,7 +16,6 @@ type EmbeddingUserPreferences = {
     location: string[];
 };
 
-
 const EMBEDDING_API = process.env.EMBEDDING_API || "";
 const API_KEY = "$dollarbabydollar$";
 
@@ -32,12 +31,18 @@ const userEmbeddingWorker = new Worker(
             let userPreference: EmbeddingUserPreferences | null =
                 await userPreferencesModel.findOne({ userId }).lean();
 
+            const resumeReview = await ResumeReviewModel
+                .findOne({ userId })
+                .sort({ reviewedAt: -1 })
+                .lean();
+
+            const resumeSkills: string[] = resumeReview?.skills ?? [];
 
             if (!userPreference) {
                 await userPreferencesModel.create({
                     userId,
                     skills_manual: [],
-                    skills_from_resume: [],
+                    skills_from_resume: resumeSkills,
                     merged_skills: [],
                     preferred_roles: [],
                     location: [],
@@ -46,18 +51,12 @@ const userEmbeddingWorker = new Worker(
                 userPreference = {
                     userId,
                     skills_manual: [],
-                    skills_from_resume: [],
+                    skills_from_resume: resumeSkills,
                     merged_skills: [],
                     preferred_roles: [],
                     location: [],
                 };
-
             }
-
-            const resumeReview = await ResumeReviewModel
-                .findOne({ userId })
-                .sort({ reviewedAt: -1 })
-                .lean();
 
             const userText = buildUserEmbeddingText({
                 preferences: userPreference,

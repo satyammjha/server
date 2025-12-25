@@ -31,27 +31,18 @@ export const getJobsForDashboard = async (
             sort,
         } = req.query;
 
-        // 2. Build the Query Object
-        // We use 'any' here for flexibility because Mongoose query objects 
-        // with complex $or/$text operators can be difficult to strictly type 
-        // while dynamically building them.
         const query: FilterQuery<typeof JobModel> = {
             is_active: true,
         };
 
-        // --- SEARCH FEATURE (Full Text Search) ---
         if (search) {
             query.$text = { $search: search };
         }
 
-        // --- FILTERS ---
-
-        // Filter: Job Title
         if (job_title) {
             query.job_title = { $regex: job_title, $options: "i" };
         }
 
-        // Filter: Location
         if (location) {
             query.$or = [
                 { locations: { $regex: location, $options: "i" } },
@@ -59,13 +50,11 @@ export const getJobsForDashboard = async (
             ];
         }
 
-        // Filter: Job Type
         if (job_type) {
             const types = job_type.split(",");
             query.job_types = { $in: types.map((t) => new RegExp(t, "i")) };
         }
 
-        // Filter: Experience
         if (experience) {
             const expYear = Number(experience);
             if (!isNaN(expYear)) {
@@ -74,7 +63,6 @@ export const getJobsForDashboard = async (
             }
         }
 
-        // Filter: Salary
         if (min_salary) {
             const salary = Number(min_salary);
             if (!isNaN(salary)) {
@@ -83,24 +71,20 @@ export const getJobsForDashboard = async (
             }
         }
 
-        // 3. Sorting Logic
-        let sortOption: Record<string, any> = { posted_at: -1 }; // Default: Newest first
+        let sortOption: Record<string, any> = { posted_at: -1 };
 
         if (sort === "oldest") {
             sortOption = { posted_at: 1 };
         } else if (sort === "salary_high") {
             sortOption = { max_salary: -1 };
         } else if (search) {
-            // If searching by text, sort by relevance score
             sortOption = { score: { $meta: "textScore" } };
         }
 
-        // 4. Pagination Logic
         const pageNum = Number(page) || 1;
         const limitNum = Number(limit) || 10;
         const skip = (pageNum - 1) * limitNum;
 
-        // 5. Execute Queries
         const [jobs, totalJobs] = await Promise.all([
             JobModel.find(query, search ? { score: { $meta: "textScore" } } : {})
                 .sort(sortOption)
@@ -110,7 +94,6 @@ export const getJobsForDashboard = async (
             JobModel.countDocuments(query),
         ]);
 
-        // 6. Send Response
         res.status(200).json({
             success: true,
             count: jobs.length,
@@ -127,7 +110,6 @@ export const getJobsForDashboard = async (
     } catch (error) {
         console.error("Error in getJobsForDashboard:", error);
 
-        // Type narrowing for error
         const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
         res.status(500).json({

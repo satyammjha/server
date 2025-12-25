@@ -3,11 +3,11 @@ import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userPreferencesModel from "../models/userPreferences.model";
+import ResumeReviewModel from "../models/resumeReview.models";
 import { userEmbeddingQueue } from "../queue/queue";
 import { mergeSkills } from "../utils/mergeSkills.utis";
 
 export const addUser = async (req: Request, res: Response) => {
-  console.log("Request received:", req.body);
   try {
     const { name, email, password, username } = req.body;
 
@@ -90,6 +90,7 @@ export const getProfile = async (req: Request, res: Response) => {
   }
 };
 
+
 export const updatePreference = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
@@ -111,7 +112,7 @@ export const updatePreference = async (req: Request, res: Response) => {
         ? [location]
         : undefined;
 
-    console.log("[updatePreference] request body:", {
+    console.log("[updatePreference] incoming payload:", {
       skills_manual,
       preferred_roles,
       location: normalizedLocation,
@@ -122,31 +123,44 @@ export const updatePreference = async (req: Request, res: Response) => {
     });
 
     const user = await User.findById(userId).lean();
-    console.log("[updatePreference] user found:", !!user);
 
     if (!user) {
-      console.log("[updatePreference] user not found, exiting");
+      console.warn("[updatePreference] user not found");
       return res.status(404).json({ message: "User not found" });
     }
 
-    const existingPrefs = await userPreferencesModel.findOne({ userId }).lean();
-    console.log("[updatePreference] existingPrefs:", existingPrefs);
+    const existingPrefs = await userPreferencesModel
+      .findOne({ userId })
+      .lean();
 
-    const skillsFromResume = existingPrefs?.skills_from_resume || [];
-    console.log("[updatePreference] skillsFromResume:", skillsFromResume);
-
-    const mergedSkills = mergeSkills(
-      skills_manual || existingPrefs?.skills_manual || [],
-      skillsFromResume
+    console.log(
+      "[updatePreference] existing preferences found:",
+      !!existingPrefs
     );
-    console.log("[updatePreference] mergedSkills:", mergedSkills);
+
+    const resumeReview = await ResumeReviewModel
+      .findOne({ userId })
+      .sort({ reviewedAt: -1 })
+      .lean();
+
+    const resumeSkills = resumeReview?.skills ?? [];
+
+    console.log("[updatePreference] resume skills count:", resumeSkills.length);
+
+    const finalManualSkills =
+      skills_manual ?? existingPrefs?.skills_manual ?? [];
+
+    const mergedSkills = mergeSkills(finalManualSkills, resumeSkills);
+
+    console.log("[updatePreference] merged skills count:", mergedSkills.length);
 
     const updateResult = await userPreferencesModel.updateOne(
       { userId },
       {
         $set: {
-          skills_manual: skills_manual ?? existingPrefs?.skills_manual ?? [],
+          skills_manual: finalManualSkills,
           merged_skills: mergedSkills,
+          skills_from_resume: resumeSkills,
           preferred_roles: preferred_roles ?? existingPrefs?.preferred_roles ?? [],
           location: normalizedLocation ?? existingPrefs?.location ?? [],
           expected_salary_min,
@@ -161,9 +175,13 @@ export const updatePreference = async (req: Request, res: Response) => {
       { upsert: true }
     );
 
-    console.log("[updatePreference] preferences update result:", updateResult);
+    console.log("[updatePreference] preferences upsert result:", {
+      matched: updateResult.matchedCount,
+      modified: updateResult.modifiedCount,
+      upserted: updateResult.upsertedCount,
+    });
 
-    const queueResult = await userEmbeddingQueue.add(
+    const job = await userEmbeddingQueue.add(
       "user-embedding",
       { userId },
       {
@@ -172,9 +190,7 @@ export const updatePreference = async (req: Request, res: Response) => {
       }
     );
 
-    console.log("[updatePreference] embedding job queued:", {
-      jobId: queueResult.id,
-    });
+    console.log("[updatePreference] embedding job queued:", job.id);
 
     return res.status(200).json({
       message: "Preferences updated successfully. Embedding queued.",
@@ -184,5 +200,28 @@ export const updatePreference = async (req: Request, res: Response) => {
     return res.status(500).json({
       message: "Failed to update preferences",
     });
+  }
+};
+
+
+export const getPreference = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const preference = await userPreferencesModel.findOne({ userId }).select("-embedding_queued -embedding_version -is_embedded -merged_skills").lean();
+
+
+
+    return res.status(200).json({
+      preference: preference || null,
+    });
+  } catch (error) {
+    console.error("Error in getPreference:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

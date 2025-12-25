@@ -249,3 +249,31 @@ export const saveJobNotes = async (req: Request, res: Response) => {
     res.status(500).json({ message: (err as Error).message });
   }
 }
+
+export const getJobDetails = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+    const { jobId } = req.params;
+    const id = jobId;
+    if (!id) {
+      return res.status(400).json({ message: "Job id is required" });
+    }
+
+    const job = await JobModel.findById(id).lean();
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    const isSaved = await SavedJobModel.findOne({ jobId, userId }).lean();
+
+    return res.status(200).json({
+      job,
+      isSaved: Boolean(isSaved),
+    });
+  } catch (error) {
+    console.error("[getJobDetails] Error:", error);
+    return res.status(500).json({
+      message: "Failed to fetch job details",
+    });
+  }
+};

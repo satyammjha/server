@@ -24,7 +24,7 @@ app.use((req, res, next) => {
     res.on("finish", () => {
         console.log(
             `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ` +
-            `${res.statusCode} ${Date.now() - start}ms | `
+            `${res.statusCode} ${Date.now() - start}ms`
         );
     });
 

@@ -6,15 +6,11 @@ export function buildUserEmbeddingText({
   resume?: any;
 }) {
   const parts: string[] = [];
-
   if (preferences) {
-    if (preferences.skills_manual?.length) {
-      parts.push(`Manual Skills: ${preferences.skills_manual.join(", ")}`);
-    }
 
-    if (preferences.skills_from_resume?.length) {
+    if (preferences.merged_skills) {
       parts.push(
-        `Resume Extracted Skills: ${preferences.skills_from_resume.join(", ")}`
+        `Skills: ${preferences.merged_skills.join(", ")}`
       );
     }
 
@@ -30,9 +26,6 @@ export function buildUserEmbeddingText({
   }
 
   if (resume) {
-    if (resume.skills?.length) {
-      parts.push(`Resume Skills (Review): ${resume.skills.join(", ")}`);
-    }
 
     if (resume.experience?.yearsOfExperience) {
       parts.push(
