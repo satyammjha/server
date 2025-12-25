@@ -8,26 +8,36 @@ export function buildUserEmbeddingText({
   const parts: string[] = [];
 
   if (preferences) {
-    if (preferences.skills?.length) {
-      parts.push(`Skills: ${preferences.skills.join(", ")}`);
+    if (preferences.skills_manual?.length) {
+      parts.push(`Manual Skills: ${preferences.skills_manual.join(", ")}`);
+    }
+
+    if (preferences.skills_from_resume?.length) {
+      parts.push(
+        `Resume Extracted Skills: ${preferences.skills_from_resume.join(", ")}`
+      );
     }
 
     if (preferences.preferred_roles?.length) {
-      parts.push(`Preferred Roles: ${preferences.preferred_roles.join(", ")}`);
+      parts.push(
+        `Preferred Roles: ${preferences.preferred_roles.join(", ")}`
+      );
     }
 
     if (preferences.location?.length) {
-      parts.push(`Location: ${preferences.location.join(", ")}`);
+      parts.push(`Preferred Location: ${preferences.location.join(", ")}`);
     }
   }
 
   if (resume) {
     if (resume.skills?.length) {
-      parts.push(`Resume Skills: ${resume.skills.join(", ")}`);
+      parts.push(`Resume Skills (Review): ${resume.skills.join(", ")}`);
     }
 
     if (resume.experience?.yearsOfExperience) {
-      parts.push(`Experience: ${resume.experience.yearsOfExperience} years`);
+      parts.push(
+        `Experience: ${resume.experience.yearsOfExperience} years`
+      );
     }
 
     if (resume.experience?.industries?.length) {
@@ -39,7 +49,6 @@ export function buildUserEmbeddingText({
     if (resume.strengths?.length) {
       parts.push(`Strengths: ${resume.strengths.join(", ")}`);
     }
-
 
     if (resume.additionalInsights?.careerReadiness) {
       parts.push(

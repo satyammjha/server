@@ -7,9 +7,18 @@ import { buildUserEmbeddingText } from "../utils/buildUserEmbeddingPayload";
 import ResumeReviewModel from "../models/resumeReview.models";
 import { redis } from "../queue/queue";
 
+type EmbeddingUserPreferences = {
+    userId: any;
+    skills_manual: string[];
+    skills_from_resume: string[];
+    merged_skills: string[];
+    preferred_roles: string[];
+    location: string[];
+};
+
+
 const EMBEDDING_API = process.env.EMBEDDING_API || "";
 const API_KEY = "$dollarbabydollar$";
-
 
 const userEmbeddingWorker = new Worker(
     "userEmbeddingQueue",
@@ -18,23 +27,31 @@ const userEmbeddingWorker = new Worker(
 
         try {
             const user = await UserModel.findById(userId).lean();
+            if (!user) throw new Error("User not found");
 
-            if (!user) {
-                throw new Error("User not found");
-            }
+            let userPreference: EmbeddingUserPreferences | null =
+                await userPreferencesModel.findOne({ userId }).lean();
 
-            let userPreference = await userPreferencesModel
-                .findOne({ userId })
-                .lean();
+
             if (!userPreference) {
-
-                userPreference = await userPreferencesModel.create({
+                await userPreferencesModel.create({
                     userId,
-                    skills: [],
+                    skills_manual: [],
+                    skills_from_resume: [],
+                    merged_skills: [],
                     preferred_roles: [],
                     location: [],
                 });
-                userPreference = userPreference.toObject();
+
+                userPreference = {
+                    userId,
+                    skills_manual: [],
+                    skills_from_resume: [],
+                    merged_skills: [],
+                    preferred_roles: [],
+                    location: [],
+                };
+
             }
 
             const resumeReview = await ResumeReviewModel
@@ -48,22 +65,18 @@ const userEmbeddingWorker = new Worker(
             });
 
             if (!userText || userText.length < 5) {
-                console.warn("⚠️ Skipping embedding: no meaningful data for user:", userId);
+                console.warn("⚠️ Skipping embedding (no usable data):", userId);
 
                 await UserModel.updateOne(
                     { _id: userId },
-                    {
-                        $set: {
-                            embedding_queued: false,
-                        },
-                    }
+                    { $set: { embedding_queued: false } }
                 );
 
                 return true;
             }
 
+            console.log("🧠 Generating embedding:", userId);
 
-            console.log("🌐 Calling embedding API...");
             const { data } = await axios.post(
                 EMBEDDING_API,
                 { texts: [userText] },
@@ -76,16 +89,9 @@ const userEmbeddingWorker = new Worker(
                 }
             );
 
-            console.log("📡 Embedding API response received");
-
             const embedding = data.embeddings?.[0];
-            if (!embedding) {
-                console.error("❌ No embedding returned from API:", data);
-                throw new Error("No embedding returned");
-            }
+            if (!embedding) throw new Error("No embedding returned");
 
-
-            console.log("💾 Saving embedding to UserEmbeddingModel...");
             await UserEmbeddingModel.updateOne(
                 { userId },
                 {
@@ -99,7 +105,6 @@ const userEmbeddingWorker = new Worker(
                 { upsert: true }
             );
 
-            console.log("🛠 Updating user embedding flags...");
             await UserModel.updateOne(
                 { _id: userId },
                 {
@@ -111,13 +116,11 @@ const userEmbeddingWorker = new Worker(
                 }
             );
 
-            console.log("🎉 embedding completed successfully for user:", userId);
+            console.log("✅ Embedding completed:", userId);
             return true;
         } catch (err: any) {
-            console.error("🔥 Error in embedding worker for user:", userId);
-            console.error(err?.message || err);
+            console.error("❌ Embedding worker failed:", userId, err?.message);
 
-            console.log("↩️ Resetting embedding_queued flag...");
             await UserModel.updateOne(
                 { _id: userId },
                 { $set: { embedding_queued: false } }
