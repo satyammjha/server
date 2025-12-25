@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -6,6 +7,9 @@ import route from "./routes/index.routes.js";
 import bullBoardRouter from "./queue/bullBoard.js";
 import "./service/embeddingWorker.service.js";
 import "./service/userEmbedding.service.js";
+
+import dns from "dns";
+dns.setDefaultResultOrder("ipv4first");
 
 dotenv.config();
 
