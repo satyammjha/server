@@ -22,3 +22,7 @@ export const embeddingQueue = new Queue("embeddingQueue", {
 export const userEmbeddingQueue = new Queue("userEmbeddingQueue", {
   connection: redis,
 });
+
+export const jobNotificationQueue = new Queue("jobNotificationQueue", {
+  connection: redis,
+});

@@ -16,7 +16,7 @@ const jobEmbeddingWorker = new Worker(
             const jobDoc = await JobModel.findById(jobId).lean();
             if (!jobDoc) throw new Error("Job not found");
 
-            const jobText = `
+        const jobText = `
         ${jobDoc.job_title}.
         Skills: ${(jobDoc.skills || []).join(", ")}.
         Experience: ${jobDoc.experience_range || ""}.
