@@ -56,6 +56,10 @@ cron.schedule('* * * * *', () => {
     AddToNotificationQueue();
 });
 
+cron.schedule('* * * * *', () => {
+    console.log("Notification cleanup");
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });

@@ -33,6 +33,7 @@ export const AddToNotificationQueue = async () => {
                         jobs: matches.map(m => ({
                             id: m.job._id.toString(),
                             title: m.job.job_title,
+                            logo:m.job.company_logo || "",
                             score: Math.round(m.score * 100),
                             location:
                                 m.job.location_string ||

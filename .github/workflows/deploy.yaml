@@ -19,5 +19,4 @@ jobs:
           script: |
             cd /home/ec2-user/server
             git pull
-            npm install
             pm2 restart 2
