@@ -1,6 +1,6 @@
 export const jobListTemplate = ({
   name,
-  jobs,
+  jobs
 }: {
   name: string;
   jobs: Array<{
@@ -13,6 +13,8 @@ export const jobListTemplate = ({
     score: number;
   }>;
 }) => {
+
+  const companyLogo = "https://zobly.in/logo.png"
   return `
 <!DOCTYPE html>
 <html>
@@ -24,10 +26,18 @@ export const jobListTemplate = ({
   
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; overflow: hidden;">
     
+    <!-- HEADER SECTION -->
     <div style="background-color: #1e293b; padding: 40px 20px; text-align: center;">
-      <div style="margin: 0 auto 20px auto; width: 48px; height: 48px; background-color: #3b82f6; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: bold; font-size: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-        Z
-      </div>
+      
+      <!-- YOUR CUSTOM LOGO HERE -->
+      <img 
+        src="${companyLogo}" 
+        alt="Company Logo" 
+        width="48" 
+        height="48"
+        style="margin: 0 auto 20px auto; display: block; width: 48px; height: 48px; border-radius: 12px; object-fit: contain; background-color: #ffffff; padding: 4px;" 
+      />
+
       <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Daily Job Matches</h1>
       <p style="color: #94a3b8; margin: 10px 0 0 0; font-size: 16px;">
         Hi ${name}, we found <strong>${jobs.length} roles</strong> for you.
@@ -85,10 +95,18 @@ export const jobListTemplate = ({
       })
       .join("")}
 
+      <!-- FOOTER LOGO -->
       <div style="text-align: center; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-        <div style="margin: 0 auto 10px auto; width: 32px; height: 32px; background-color: #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: bold; font-size: 14px;">
-          Z
-        </div>
+        
+        <!-- Small Footer Logo (Grayscale/Faded) -->
+        <img 
+          src="${companyLogo}" 
+          alt="zobly" 
+          width="32" 
+          height="32"
+          style="margin: 0 auto 10px auto; display: block; width: 32px; height: 32px; filter: grayscale(100%); opacity: 0.6;" 
+        />
+
         <p style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
           You received this match alert based on your preferences.<br>
           <a href="#" style="color: #64748b; text-decoration: underline;">Unsubscribe</a>

@@ -3,13 +3,13 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectToDb from "./utils/db.js";
-import route from "./routes/index.routes.js";
+import route from "./routes/index.routes.ts";
 import bullBoardRouter from "./queue/bullBoard.js";
 import cron from "node-cron"
-import "./service/embeddingWorker.service.js";
-import "./service/userEmbedding.service.js";
-import "./service/notification.service.js";
-import { AddToNotificationQueue } from "./controller/notificationQueue.controller.js"
+import "./worker/embedding.worker.js";
+import "./worker/notification.worker.js";
+import "./worker/userEmbedding.worker.js";
+import { AddToNotificationQueue, resetJobNotificaionFlag } from "./service/notification.service.js";
 
 import dns from "dns";
 dns.setDefaultResultOrder("ipv4first");
@@ -51,13 +51,14 @@ app.use("/queue", bullBoardRouter);
 const PORT = process.env.PORT || 3000;
 
 
-cron.schedule('* * * * *', () => {
-    console.log("Notification cron started");
-    AddToNotificationQueue();
+cron.schedule('0 0 * * *', async () => {
+    console.log("Resetting flags...");
+    await resetJobNotificaionFlag();
 });
 
-cron.schedule('* * * * *', () => {
-    console.log("Notification cleanup");
+cron.schedule('5,35 * * * *', async () => {
+    console.log("Queueing...");
+    await AddToNotificationQueue();
 });
 
 app.listen(PORT, () => {

@@ -2,7 +2,7 @@ import { SendMailClient } from "zeptomail";
 
 
 const url = "https://api.zeptomail.in/v1.1/email";
-const token = "Zoho-enczapikey PHtE6r1bE+3vg2cm8hIH4vPsEs73Z4Iv9LljJAFDs90TX6BRH01RqIstxGO++RktV/AQEqXOzdo95brJu++CdD67NT5MWGqyqK3sx/VYSPOZsbq6x00asFoZfkDUVY7od9Zs1CfQu9aX";
+const token = process.env.Z_TOKN || ''
 
 let client = new SendMailClient({ url, token });
 

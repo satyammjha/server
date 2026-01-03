@@ -1,73 +1,111 @@
-import { Worker } from "bullmq";
-import { redis } from "../queue/queue";
-import { sendEmail } from "../utils/sendEmail.utils";
-import { jobListTemplate } from "../utils/templates/job.template";
+import { NotificationPreferenceModel } from "../models/notificationPreference.model";
+import { jobNotificationQueue } from "../queue/queue";
+import {
+    getTopJobMatchesForUser,
+    EmbeddingMissingError,
+} from "./match.service";
 
-const embeddingMissingTemplate = ({ name }: { name: string }) => `
-<div style="font-family: Arial, sans-serif; line-height: 1.5">
-  <h2>Hi ${name},</h2>
+export const AddToNotificationQueue = async () => {
+    try {
 
-  <p>You haven’t set up your job preferences yet.</p>
+        const users = await NotificationPreferenceModel.find(
+            { isJobEmailSend: false },
+            { emailId: 1, userId: 1, name: 1 }
+        ).limit(50).lean();
 
-  <p>Update your job filters to receive the best matching jobs.</p>
+        console.log(`[Queue] Users fetched: ${users.length}`);
 
-  <a href="https://zobly.in/preferences"
-     style="
-       display:inline-block;
-       padding:10px 16px;
-       background:#2563eb;
-       color:#fff;
-       text-decoration:none;
-       border-radius:4px;
-     ">
-     Update Preferences
-  </a>
-</div>
-`;
+        for (const user of users) {
+            if (!user.emailId || !user.userId) continue;
 
-export const NotificationWorker = new Worker(
-    "jobNotificationQueue",
-    async (job) => {
-        try {
-            if (job.name === "job-notification") {
-                const { emailId, name, jobs } = job.data;
+            console.log(`[Queue] Processing user: ${user.emailId}`);
 
-                if (!emailId || !Array.isArray(jobs) || jobs.length === 0) {
-                    throw new Error("Invalid job-notification payload");
+            try {
+                const matches = await getTopJobMatchesForUser(
+                    user.userId.toString(),
+                    5
+                );
+
+                if (!matches.length) {
+                    console.log(`[Queue] No matches found for ${user.emailId}`);
+                    continue;
                 }
 
-                const html = jobListTemplate({
-                    name: name ?? "there",
-                    jobs,
-                });
+                await jobNotificationQueue.add(
+                    "job-notification",
+                    {
+                        emailId: user.emailId,
+                        name: user.name ?? "there",
+                        jobs: matches.map(m => ({
+                            id: m.job._id.toString(),
+                            title: m.job.job_title,
+                            company: m.job.company_name || "Job Opportunity",
+                            logo: m.job.company_logo || "",
+                            score: Math.round(m.score * 100),
+                            location:
+                                m.job.location_string ||
+                                (Array.isArray(m.job.locations)
+                                    ? m.job.locations.join(", ")
+                                    : ""),
+                            salary: m.job.hide_salary
+                                ? undefined
+                                : `${m.job.min_salary}-${m.job.max_salary} ${m.job.salary_currency}`,
+                            url: m.job.apply_url,
+                        })),
+                    },
+                    {
+                        jobId: `${user.emailId}-job-matches-${Date.now()}`,
+                        attempts: 3,
+                        backoff: { type: "exponential", delay: 5000 },
+                        removeOnComplete: true,
+                        removeOnFail: 100,
+                    }
+                );
 
-                await sendEmail(emailId, name ?? "there", html);
-                return { sent: true };
-            }
+                await NotificationPreferenceModel.updateOne(
+                    { _id: user._id },
+                    { $set: { isJobEmailSend: true } }
+                );
 
-            if (job.name === "embedding-missing") {
-                const { emailId, name } = job.data;
+                console.log(`[Queue] ✅ Job queued for ${user.emailId}`);
+            } catch (err) {
+                if (err instanceof EmbeddingMissingError) {
+                    await jobNotificationQueue.add(
+                        "embedding-missing",
+                        {
+                            emailId: user.emailId,
+                            name: user.name ?? "there",
+                        },
+                        {
+                            jobId: `${user.emailId}-embedding-missing-${Date.now()}`,
+                            attempts: 1,
+                            removeOnComplete: true,
+                        }
+                    );
 
-                if (!emailId) {
-                    throw new Error("Invalid embedding-missing payload");
+                    await NotificationPreferenceModel.updateOne(
+                        { _id: user._id },
+                        { $set: { isJobEmailSend: true } }
+                    );
+
+                    console.log(`[Queue] Embedding-missing queued for ${user.emailId}`);
+                } else {
+                    console.error(`[Queue] Error processing ${user.emailId}:`, err);
                 }
-
-                const html = embeddingMissingTemplate({
-                    name: name ?? "there",
-                });
-
-                await sendEmail(emailId, name ?? "there", html);
-                return { sent: true };
             }
-
-            return { ignored: true };
-        } catch (error) {
-            console.error("[NotificationWorker]", error);
-            throw error;
         }
-    },
-    {
-        connection: redis,
-        concurrency: 1,
+    } catch (err) {
+        console.error("[AddToNotificationQueue] Critical Error:", err);
     }
-);
+};
+
+export const resetJobNotificaionFlag = async () => {
+    try {
+        const result = await NotificationPreferenceModel.updateMany(
+            { isJobEmailSend: true },
+            { $set: { isJobEmailSend: false } }
+        );
+    } catch (error) {
+        console.error("❌ CRITICAL ERROR: Failed to reset job notification flags", error);
+    }
+}
