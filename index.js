@@ -9,6 +9,7 @@ import cron from "node-cron"
 import "./worker/embedding.worker.js";
 import "./worker/notification.worker.js";
 import "./worker/userEmbedding.worker.js";
+import "./worker/resume.worker.ts";
 import { AddToNotificationQueue, resetJobNotificaionFlag } from "./service/notification.service.js";
 
 import dns from "dns";

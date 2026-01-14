@@ -54,7 +54,6 @@ const resumeReview = async (req: AuthenticatedRequest, res: Response) => {
       buffer: req.file.buffer
     });
 
-
     await resumeQueue.add(
       "resumeQueue",
       {
@@ -67,14 +66,12 @@ const resumeReview = async (req: AuthenticatedRequest, res: Response) => {
       }
     );
 
-    // SAVE RAW TEXT DUMP
     await ResumeDump.findOneAndUpdate(
       { userId },
       { resumeText },
       { upsert: true, new: true }
     );
 
-    // CLEANUP
     if (tempFilePath) {
       await fs.unlink(tempFilePath).catch((err) =>
         console.error("Failed to delete temp file:", err)

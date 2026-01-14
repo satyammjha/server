@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Indian Markets Brace for Q3 Earnings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description"
+        content="Indian equity markets face a critical week driven by the Q3 earnings season kickoff." />
+
+    <!-- Ad Network Preconnect -->
+    <link rel="preconnect" href="https://www.highperformanceformat.com">
+
+    <!-- Whalesbook/App Preconnects -->
+    <link rel="preconnect" href="https://app1.whalesbook1.shop" crossorigin>
+    <link rel="preconnect" href="https://images.whalesbook.com" crossorigin>
+    <link rel="preconnect" href="https://whalesbook.com">
+
+    <style>
+        :root {
+            /* Theme Colors */
+            --bg: #000000;
+            --card-bg: #09090b;
+            --border: #27272a;
+
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.3);
+
+            --separator-gradient: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+
+            --brand-whatsapp: #25D366;
+            --brand-linkedin: #0077b5;
+            --brand-facebook: #1877F2;
+            --brand-x: #fff;
+
+            --positive: #22c55e;
+            --negative: #ef4444;
+            --warning: #f59e0b;
+
+            --font-serif: Georgia, 'Times New Roman', Times, serif;
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        /* CLS FIX: Reserve space for Header */
+        #header-root {
+            min-height: 60px;
+            display: block;
+            width: 100%;
+        }
+
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 1000;
+            background: transparent;
+        }
+
+        /* LAYOUT FIX: Main Container */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* LAYOUT FIX: Grid definition */
+        .main-layout-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            /* Content takes space, Sidebar fixed width */
+            gap: 40px;
+            padding-top: 20px;
+            padding-bottom: 40px;
+            align-items: start;
+        }
+
+        .main-content-area {
+            min-width: 0;
+            /* Prevents grid blowout */
+        }
+
+        /* Responsive Layout - Stack Grid */
+        @media(max-width: 900px) {
+            .main-layout-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Responsive Layout - Container Padding on Small Screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 4px;
+            }
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            gap: 8px;
+            /* margin-top: 4px; */
+            align-self: center;
+        }
+
+        .article-meta-top span.category {
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 8px;
+            background: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .article-meta-top span.separator {
+            margin: 0 8px;
+            opacity: 0.3;
+        }
+
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 42px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            padding: 0px 12px;
+        }
+
+        .author-social-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+        }
+
+        .author-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+
+        .author-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-label {
+            font-size: 8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .author-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .author-name span {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+
+        .social-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+        }
+
+        /* Base icon button */
+        .share-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #0f0f0f;
+            transition: background 0.2s ease;
+        }
+
+        #whatsapp {
+            background: var(--brand-whatsapp);
+        }
+
+        #facebook {
+            background: var(--brand-facebook);
+        }
+
+        /* Normalize all SVG icons */
+        .share-icon svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        /* Hover effect */
+        .share-icon:hover {
+            background: #1a1a1a;
+        }
+
+        /* Google pill alignment */
+        .google-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #0f0f0f;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .google-pill svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        .google-pill-text span {
+            display: block;
+            font-size: 11px;
+            line-height: 1.1;
+        }
+
+        /* CLS FIX: Aspect Ratio and Background color for Main Hero */
+        .main-hero {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            /* Reserves space before load */
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #111;
+            /* Placeholder */
+            display: block;
+        }
+
+        .content-body {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #e4e4e7;
+            font-family: var(--font-serif);
+            padding: 0 12px;
+            /* margin-top: 30px; */
+        }
+
+        .content-body p {
+            margin-bottom: 28px;
+        }
+
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 4.8rem;
+            line-height: 0.85;
+            font-weight: 700;
+            margin-right: 12px;
+            margin-top: 2px;
+            color: var(--accent);
+            font-family: var(--font-serif);
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            /* Post-load stability */
+            min-height: 100px;
+        }
+
+        .widget-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f1f22;
+        }
+
+        .watchlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .w-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            font-family: var(--font-sans);
+        }
+
+        .w-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .w-price {
+            text-align: right;
+        }
+
+        .w-val {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            display: block;
+        }
+
+        .w-change {
+            font-size: 12px;
+        }
+
+        .pos {
+            color: var(--positive);
+        }
+
+        .neg {
+            color: var(--negative);
+        }
+
+        /* Related News */
+        .related-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            text-decoration: none;
+        }
+
+        .related-img {
+            width: 80px;
+            height: 54px;
+            background: #222;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .related-info {
+            flex: 1;
+        }
+
+        .related-tag {
+            font-size: 10px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .related-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.4;
+            font-family: var(--font-sans);
+        }
+
+        .related-item:hover .related-title {
+            color: var(--accent);
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 60px 20px;
+            background: #000;
+            text-align: center;
+            color: #555;
+            font-size: 13px;
+        }
+
+        #footer-space {
+            margin-bottom: 20px;
+        }
+
+        /* Mobile specific fixes */
+        @media (max-width: 600px) {
+            .share-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+
+            .main-layout-grid {
+                margin: 0;
+            }
+
+            .share-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .google-pill svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .google-pill-text span {
+                font-size: 10px;
+                line-height: 1.2;
+            }
+
+            h1 {
+                font-size: 26px;
+                margin: 0 0 0 0;
+            }
+
+            .author-social-wrapper {
+                justify-content: flex-start;
+            }
+
+            .social-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        .last-news {
+            display: flex;
+            flex-wrap: wrap;
+            /* allow wrapping */
+            gap: 8px;
+        }
+
+        /* Each item takes 1/3 of the row */
+        .last-news .related-item {
+            flex: 0 0 calc(33.333% - 16px);
+        }
+
+        /* Mobile: stack one by one */
+        @media (max-width: 768px) {
+            .last-news .related-item {
+                flex: 0 0 100%;
+            }
+
+            .last-news {
+                padding: 12px;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="header-root"></div>
+
+    <div class="container main-layout-grid">
+
+        <main class="main-content-area">
+
+            <div class="article-meta-top">
+                <a href="https://whalesbook.com/news" aria-label="Go To back Whalesbook News" style="margin-top: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-left">
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+                </a>
+                <span class="category" id="extra-news-category">TECH</span>
+                <span class="separator">|</span>
+                Whalesbook News
+                Team
+            </div>
+
+            <h1>Indian Markets Brace for Q3 Earnings, Inflation Data & Global Cues</h1>
+
+            <div class="author-social-wrapper">
+
+                <div class="author-block">
+                    <div class="whalesbook-icon">
+                    </div>
+                    <div class="author-text">
+                        <span class="author-label">Author</span>
+                        <span class="author-name">Kavya Nair <span style="margin:0 4px">|</span>
+                            <span> 11th January 2026, 4:41 pm</span></span>
+                    </div>
+                </div>
+
+                <div class="social-actions">
+
+                    <!-- WhatsApp -->
+                    <a href="#" class="share-icon whatsapp" id="whatsapp" title="Share on WhatsApp" target="_blank"
+                        aria-label="Share on whatsapp" rel="noopener">
+                        <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M16.04 2.004c-7.732 0-14.02 6.288-14.02 14.02 0 2.47.647 4.89 1.875 7.02L2 30l7.164-1.857a13.948 13.948 0 006.875 1.858h.001c7.73 0 14.02-6.288 14.02-14.02 0-3.746-1.46-7.267-4.108-9.914a13.94 13.94 0 00-9.912-4.063zm0 25.45a11.39 11.39 0 01-5.79-1.587l-.415-.245-4.25 1.104 1.135-4.142-.27-.43a11.39 11.39 0 01-1.72-6.06c0-6.31 5.13-11.44 11.44-11.44 3.05 0 5.915 1.188 8.07 3.344a11.35 11.35 0 013.35 8.095c0 6.31-5.13 11.44-11.44 11.44zm6.275-8.54c-.343-.172-2.03-1.003-2.346-1.118-.316-.114-.545-.172-.774.172-.23.343-.888 1.118-1.09 1.346-.202.23-.402.258-.745.086-.343-.172-1.45-.534-2.76-1.704-1.02-.91-1.708-2.03-1.91-2.374-.202-.343-.02-.53.153-.702.155-.154.343-.402.515-.603.172-.202.23-.343.344-.573.114-.23.057-.43-.03-.603-.086-.172-.774-1.87-1.06-2.56-.28-.672-.565-.58-.774-.59-.2-.01-.43-.012-.66-.012-.23 0-.603.086-.917.43-.316.343-1.2 1.173-1.2 2.86 0 1.69 1.23 3.32 1.4 3.55.172.23 2.42 3.7 5.86 5.18.82.353 1.46.564 1.96.722.823.262 1.573.225 2.165.136.66-.1 2.03-.83 2.317-1.63.287-.8.287-1.49.2-1.63-.086-.144-.316-.23-.66-.402z" />
+                        </svg>
+                    </a>
+
+                    <!-- X (Twitter) -->
+                    <a href="#" class="share-icon x" title="Share on X" target="_blank" rel="noopener"
+                        aria-label="Share on x">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+
+
+
+                    <!-- Facebook -->
+                    <a href="#" class="share-icon facebook" id="facebook" title="Share on Facebook" target="_blank"
+                        aria-label="Share on Facebook" rel="noopener">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+
+                    <!-- Google Preferred Source -->
+                    <a href="https://www.google.com/search?q=whalesbook" class="google-pill" target="_blank"
+                        aria-label="Search on Google" rel="noopener">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#4285F4"
+                                d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.6v3.1h3.9c2.28-2.1 3.58-5.19 3.58-8.94l-.06-.02z" />
+                            <path fill="#34A853"
+                                d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.9-3.1c-1.08.72-2.45 1.16-4.03 1.16-3.13 0-5.78-2.11-6.73-4.96H1.505v3.17C3.44 21.11 7.575 24 12.255 24z" />
+                            <path fill="#FBBC05"
+                                d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.53H1.505C.55 8.44 0 10.66 0 13s.55 4.56 1.505 6.47l4.02-3.18z" />
+                            <path fill="#EA4335"
+                                d="M12.255 5.05c1.77 0 3.35.6 4.6 1.8l3.42-3.42C18.205 1.51 15.495 0 12.255 0 7.575 0 3.44 2.89 1.505 6.53l4.02 3.18c.95-2.85 3.6-4.96 6.73-4.96z" />
+                        </svg>
+                        <div class="google-pill-text">
+                            <span>Add as a Preferred</span>
+                            <span>Source on Google</span>
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <picture>
+                <source
+                    srcset="https://images.whalesbook.com/images/thumbnail_6966078048839f428387fab8_1768294345964-mobile.jpeg"
+                    media="(max-width: 768px)">
+
+                <img src="https://images.whalesbook.com/images/thumbnail_6966078048839f428387fab8_1768294345964.jpeg"
+                    class="main-hero" alt="Market Analysis" fetchpriority="high" loading="eager" decoding="async">
+            </picture>
+
+            <div
+                style="background-color: #050505; color: #ffffff; padding: 30px 20px; box-sizing: border-box; width: 100%;">
+
+                <div style="max-width: 900px; margin: 0 auto;">
+
+                    <div style="border-left: 4px solid var(--accent); padding-left: 25px;">
+                        <span style="
+                                        display: block;
+                                        font-size: 14px;
+                                        letter-spacing: 2px;
+                                        text-transform: uppercase;
+                                        color: #aaaaaa;
+                                        margin-bottom: 10px;
+                                        font-weight: 600;
+                        ">
+                            Overview
+                        </span>
+
+                        <p
+                            style="font-family: 'Georgia', 'Times New Roman', Times, serif; font-style: italic; font-size: 22px; line-height: 1.6; color: #ffffff; margin: 0;">
+
+                            "As the digital rupee matures and global logistics shift, the Indian Railway network
+                            is
+                            facing its biggest modernization challenge in a generation."
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <article class="content-body">
+                <p class="drop-cap">
+                    Indian equity markets face a critical week driven by the Q3 earnings season kickoff,
+                    featuring IT
+                    giants like
+                    TCS and Infosys. Crucial domestic inflation data (CPI, WPI) and global developments,
+                    including US
+                    trade policy
+                    shifts, will significantly influence investor sentiment and market direction.
+                </p>
+                <p>
+                    For decades, the standard Indian portfolio was anchored by the gleaming security of physical
+                    gold.
+                    However, as
+                    global market volatility reaches new peaks in early 2026, the digital transition has
+                    accelerated.
+                    Investors
+                    are now weighing the emotional value of holding a physical asset against the cold efficiency
+                    of
+                    Exchange
+                    Traded Funds (ETFs).
+                </p>
+
+                <p>
+                    As the digital rupee matures and global inflation hedges shift, the traditional 'Gold
+                    Sovereign' is
+                    facing its
+                    biggest existential challenge in a generation.
+                </p>
+                <p>
+                    Market analysts predict a volatile week ahead as FIIs adjust positions based on the Fed's
+                    latest
+                    signals. The
+                    Nifty 50 is expected to test new support levels near 24,500, while resistance remains strong
+                    at
+                    25,200.
+                </p>
+            </article>
+
+        </main>
+
+        <aside class="sidebar">
+
+            <div class="widget">
+                <div class="widget-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>
+                    Editor's Choice
+                </div>
+                <div id="r1">
+                    <div style="color:#444; font-size:12px;"></div>
+                </div>
+            </div>
+
+
+            <div class="widget">
+                <div class="widget-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>
+                    <span id="more-from"></span>
+                </div>
+                <div id="r2">
+                    <div style="color:#444; font-size:12px;"></div>
+                </div>
+            </div>
+
+
+        </aside>
+
+        <div id="r3" class="last-news">
+            <div style="color:#444; font-size:12px;"></div>
+        </div>
+
+    </div>
+
+    <div id="footer-space"></div>
+    <div id="footer-root"></div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("mobileMenu");
+            if (menu) menu.classList.toggle("active");
+        }
+    </script>
+
+
+    <script>
+        (function () {
+            let newsLoaded = false;
+            const categoryEl = document.getElementById("extra-news-category");
+            const sector = categoryEl
+                ? categoryEl.textContent.trim().toLowerCase().replace(/^\w/, c => c.toUpperCase())
+                : "Auto";
+
+            const moreFromEl = document.getElementById("more-from");
+            if (moreFromEl) {
+                moreFromEl.textContent = `More from ${sector}`;
+            }
+            function loadNews() {
+                if (newsLoaded) return;
+                newsLoaded = true;
+                const pathParts = window.location.pathname.split("/").filter(Boolean);
+
+                const language = pathParts.length > 1 ? pathParts[1] : "English";
+                const baseUrl = `https://whalesbook.com/news/${language}`;
+
+                const API = "https://app1.whalesbook1.shop/published-news-collection/extraFree";
+
+                fetch(API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sector }),
+                    keepalive: true
+                })
+                    .then(r => r.json())
+                    .then(d => {
+
+                        /* =======================
+                           R1 → SelectedSectors
+                        ======================== */
+                        const items = (d.otherSectors || []);
+                        const el = document.getElementById("r1");
+
+                        if (!el) {
+                            console.warn("⚠️ Target element #r1 not found in DOM");
+                        } else if (!items.length) {
+                            el.innerHTML = "<div style='color:#555;font-size:12px'>No related news found.</div>";
+                        } else {
+
+                            const html = items.map(i => {
+                                const category = i.newsType.replace(/\s+/g, '').replace(/\//g, '');
+                                const titleSlug = i.title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                                const href = `${baseUrl}/${category}/${titleSlug}/${i._id}`;
+
+                                return `
+<a class="related-item" href="${href}">
+  <img 
+    src="${i.imageVersions.find(img => img.key === 'small')?.url || i.imageUrl}" 
+    class="related-img" 
+    loading="lazy" 
+    decoding="async" 
+    alt=""
+  >
+  <div class="related-info">
+    <div class="related-tag">${i.newsType || 'NEWS'}</div>
+    <div class="related-title">${i.title}</div>
+  </div>
+</a>
+`;
+                            }).join('');
+                            el.innerHTML = html;
+                        }
+
+                        /* =======================
+                           R2 → selectedSector
+                        ======================== */
+                        const r2 = document.getElementById("r2");
+                        if (r2) {
+                            const selectedItems = (d.selectedSector?.reports || [])
+
+                            if (!selectedItems.length) {
+                                r2.innerHTML = "<div style='color:#555;font-size:12px'></div>";
+                            } else {
+                                const htmlR2 = selectedItems.map(i => {
+                                    const category = i.newsType.replace(/\s+/g, '').replace(/\//g, '');
+                                    const titleSlug = i.title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                                    const href = `${baseUrl}/${category}/${titleSlug}/${i._id}`;
+
+                                    return `
+<a class="related-item" href="${href}">
+  <img 
+    src="${i.imageVersions?.find(img => img.key === 'small')?.url || i.imageUrl}" 
+    class="related-img" 
+    loading="lazy" 
+    decoding="async" 
+    alt=""
+  >
+  <div class="related-info">
+    <div class="related-tag">${i.newsType || 'NEWS'}</div>
+    <div class="related-title">${i.title}</div>
+  </div>
+</a>
+`;
+                                }).join('');
+
+                                r2.innerHTML = htmlR2;
+                            }
+                        }
+
+                        /* =======================
+                           R3 → randomSectors
+                        ======================== */
+                        const r3 = document.getElementById("r3");
+                        if (r3) {
+                            const randomSectors = (d.randomSectors || []);
+
+                            if (!randomSectors.length) {
+                                r3.innerHTML = "<div style='color:#555;font-size:12px'></div>";
+                            } else {
+
+                                const htmlR3 = randomSectors.map(sec => {
+                                    const reports = sec.reports || [];
+                                    if (!reports.length) return "";
+                                    const cards = reports.map(i => {
+                                        const category = i.newsType.replace(/\s+/g, '').replace(/\//g, '');
+                                        const titleSlug = i.title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                                        const href = `${baseUrl}/${category}/${titleSlug}/${i._id}`;
+
+                                        return `
+<a class="related-item" href="${href}">
+    <img 
+        src="${i.imageVersions?.find(img => img.key === 'small')?.url || i.imageUrl}" 
+        class="related-img" 
+        loading="lazy" 
+        decoding="async" 
+        alt=""
+    >
+    <div class="related-info">
+        <div class="related-title">${i.title}</div>
+    </div>
+</a>
+`;
+                                    }).join('');
+
+
+                                    return `
+                <div class="sector-block" style="width:100%;">
+                    <div class="sector-title" style="color :#a855f7; font-weight:600;margin:12px 0 8px;font-size:14px;">
+                        ${sec.sector}
+                    </div>
+                    <div class="sector-grid last-news">
+                        ${cards}
+                    </div>
+                </div>
+            `;
+                                }).join('');
+
+                                r3.innerHTML = htmlR3;
+                            }
+                        }
+
+
+                        console.log("✅ r1, r2, r3 loaded successfully");
+
+                    })
+                    .catch((err) => {
+                        console.error("❌ Failed to load extra news:", err);
+                    });
+            }
+
+            // Trigger only on first scroll
+            window.addEventListener("scroll", function onFirstScroll() {
+                loadNews();
+                window.removeEventListener("scroll", onFirstScroll);
+            }, { passive: true });
+
+            // Expose for manual testing
+            window.loadExtraNews = loadNews;
+
+        })();
+    </script>
+
+
+
+    <script>
+        (function () {
+            var analyticsLoaded = false;
+
+            function loadAnalytics() {
+                if (analyticsLoaded) {
+                    return;
+                }
+
+                analyticsLoaded = true;
+
+                var gaScript = document.createElement('script');
+                gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7TVD31SZDR";
+                gaScript.async = true;
+                document.head.appendChild(gaScript);
+
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-7TVD31SZDR');
+
+                // Fire Initial GA Event
+                gtag("event", "NEWS_DETAILS_PAGE_OPENED", {
+                    event_category: "news",
+                    event_label: location.pathname
+                });
+
+
+                // --- 2. Load Mixpanel ---
+
+                (function (f, b) {
+                    if (!b.__SV) {
+                        var e, g, i, h;
+                        window.mixpanel = b;
+                        b._i = [];
+                        b.init = function (e, f, c) {
+                            function g(a, d) {
+                                var b = d.split(".");
+                                2 == b.length && (a = a[b[0]], d = b[1]);
+                                a[d] = function () {
+                                    a.push([d].concat(Array.prototype.slice.call(arguments, 0)))
+                                }
+                            }
+                            var a = b;
+                            "undefined" !== typeof c ? a = b[c] = [] : c = "mixpanel";
+                            a.people = a.people || [];
+                            i = "track".split(" ");
+                            for (h = 0; h < i.length; h++) g(a, i[h]);
+                            b._i.push([e, f, c])
+                        };
+                        b.__SV = 1.2;
+                        e = f.createElement("script");
+                        e.type = "text/javascript";
+                        e.async = !0;
+                        e.src = "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+                        g = f.getElementsByTagName("script")[0];
+                        g.parentNode.insertBefore(e, g);
+                    }
+                })(document, window.mixpanel || []);
+
+                // Initialize Mixpanel
+                mixpanel.init("aa1c4c90b8e7ff96bbf487e3a02043da", { autocapture: false });
+
+                // Fire Initial Mixpanel Event
+                mixpanel.track("NEWS_DETAILS_PAGE_OPENED", {
+                    position: "NEWS_DETAILS_PAGE",
+                    pathname: location.pathname
+                });
+
+            }
+
+            // Trigger only on first scroll
+            window.addEventListener("scroll", function onFirstScroll() {
+                loadAnalytics();
+                window.removeEventListener("scroll", onFirstScroll);
+            }, { passive: true });
+
+            // Expose for manual testing if needed
+            window.loadAnalytics = loadAnalytics;
+        })();
+    </script>
+
+    <!-- 3. MASTER SCROLL HANDLER (THE FIX) -->
+    <script>
+        window.onscroll = function () {
+            // Part A: Update Progress Bar
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+
+            var bar = document.getElementById("progressBar");
+            if (bar) bar.style.width = scrolled + "%";
+
+            // Part B: Trigger Lazy Loaded Scripts
+            // This checks if the user has scrolled, then calls the functions.
+            // The internal flags inside the functions prevent them from running more than once.
+            if (window.loadExtraNews) {
+                window.loadExtraNews();
+            }
+
+            if (window.loadAnalytics) {
+                window.loadAnalytics();
+            }
+        };
+    </script>
+
+    <script>
+        (function () {
+            var FRAGMENT_URL = "https://whalesbook-cdn.b-cdn.net/home/footer/footer.html";
+            var root = document.getElementById("footer-root");
+            if (!root) return;
+
+            var loaded = false;
+
+            function loadFooter() {
+                if (loaded) return;
+                loaded = true;
+
+                console.log("📥 Loading promotional footer...");
+
+                fetch(FRAGMENT_URL, { cache: "force-cache" })
+                    .then(function (r) { return r.text(); })
+                    .then(function (markup) {
+                        var wrap = document.createElement('div');
+                        wrap.innerHTML = markup;
+
+                        // Move any <style> tags to <head>
+                        var styles = wrap.querySelectorAll('style');
+                        styles.forEach(function (s) { document.head.appendChild(s); });
+
+                        // Inject footer
+                        root.innerHTML = markup;
+
+                        console.log("✅ Promotional footer injected");
+                    })
+                    .catch(function () {
+                        console.error("❌ Failed to load footer");
+                    });
+            }
+
+            var onScroll = function () {
+                window.removeEventListener('scroll', onScroll);
+                loadFooter();
+            };
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+        })();
+    </script>
+
+    <script>
+        (function () {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.title);
+
+            document.querySelector('.share-icon.whatsapp').href =
+                `https://wa.me/?text=${title}%20${url}`;
+
+            document.querySelector('.share-icon.x').href =
+                `https://twitter.com/intent/tweet?text=${title}&url=${url}`;
+
+
+            document.querySelector('.share-icon.facebook').href =
+                `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        })();
+    </script>
+    <script>
+        fetch("https://whalesbook-cdn.b-cdn.net/home/header/header.html")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("header-root").innerHTML = html;
+            });
+    </script>
+</body>
+
+</html>
