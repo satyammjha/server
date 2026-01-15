@@ -19,4 +19,4 @@ jobs:
           script: |
             cd /home/ec2-user/server
             git pull
-            pm2 restart 2
+            pm2 restart 1
