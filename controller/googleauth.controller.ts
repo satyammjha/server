@@ -11,7 +11,6 @@ interface DecodedToken {
 }
 
 export const authWithGoogle = async (req: Request, res: Response) => {
-
     try {
         const { code } = req.body;
 
@@ -19,7 +18,6 @@ export const authWithGoogle = async (req: Request, res: Response) => {
             console.error("❌ Code missing in request body");
             return res.status(400).json({ message: "Code missing" });
         }
-
 
         const tokenRes = await axios.post(
             `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
@@ -33,9 +31,7 @@ export const authWithGoogle = async (req: Request, res: Response) => {
             { headers: { "Content-Type": "application/json" } }
         );
 
-
         const { id_token } = tokenRes.data;
-
         const decoded = jwt.decode(id_token) as DecodedToken;
 
         if (!decoded || !decoded.email || !decoded.sub) {
@@ -46,8 +42,18 @@ export const authWithGoogle = async (req: Request, res: Response) => {
         let user = await User.findOne({ email: decoded.email });
 
         if (!user) {
+            let baseUsername = decoded.email.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
+            let username = baseUsername;
+            let count = 1;
+
+            while (await User.exists({ username })) {
+                username = `${baseUsername}${count}`;
+                count++;
+            }
+
             user = await User.create({
                 email: decoded.email,
+                username,
                 name: decoded.name || "User",
                 avatar: decoded.picture,
                 provider: "google",
@@ -58,11 +64,9 @@ export const authWithGoogle = async (req: Request, res: Response) => {
         }
 
         const appToken = jwt.sign(
-            { id: user?._id },
+            { id: user._id },
             process.env.JWT_SECRET as string,
-            {
-                expiresIn: "1h",
-            }
+            { expiresIn: "1h" }
         );
 
         return res.json({ token: appToken, user });
