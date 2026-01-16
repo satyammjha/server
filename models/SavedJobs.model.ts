@@ -16,4 +16,5 @@ const SavedJobSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+SavedJobSchema.index({ jobId: 1 });
 export const SavedJobModel = mongoose.model("SavedJob", SavedJobSchema);

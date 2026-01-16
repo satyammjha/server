@@ -45,7 +45,6 @@ export const getAllJobs = async (req: Request, res: Response) => {
   }
 };
 
-
 export const saveJob = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;

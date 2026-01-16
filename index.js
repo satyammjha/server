@@ -11,8 +11,10 @@ import "./worker/notification.worker.js";
 import "./worker/userEmbedding.worker.js";
 import "./worker/resume.worker.ts";
 import { AddToNotificationQueue, resetJobNotificaionFlag } from "./service/notification.service.js";
+import clearOldJob from "./service/resetJob.service.ts";
 
 import dns from "dns";
+import { clear } from "console";
 dns.setDefaultResultOrder("ipv4first");
 
 dotenv.config();
@@ -61,6 +63,11 @@ cron.schedule('5,35 * * * *', async () => {
     console.log("Queueing...");
     await AddToNotificationQueue();
 });
+
+cron.schedule('30 13 * * *', async () => {
+    await clearOldJob();
+});
+
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
