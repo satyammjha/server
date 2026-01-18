@@ -15,5 +15,5 @@ router.post('/update', authMiddleware, updateJobStatus);
 router.post('/comment', authMiddleware, saveJobNotes);
 router.get('/matches', authMiddleware, getJobMatches);
 router.get('/details/:jobId', authMiddleware, getJobDetails);
-router.get('details/v2/:jobId', getJobDetailsV2);
+router.get('/details/v2/:jobId', getJobDetailsV2);
 export default router;
