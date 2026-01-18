@@ -120,4 +120,30 @@ export const getJobsForDashboard = async (
     }
 };
 
+export const getJobDetailsV2 = async (req: Request, res: Response) => {
+    try {
+        const { jobId } = req.params;
+
+        if (!jobId) {
+            return res.status(400).json({ message: "Job id is required" });
+        }
+
+        const job = await JobModel.findById(jobId).lean();
+
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        return res.status(200).json({
+            job, isSaved: false,
+        });
+
+    } catch (error) {
+        console.error("[getJobDetails] Error:", error);
+        return res.status(500).json({
+            message: "Failed to fetch job details",
+        });
+    }
+};
+
 export default getJobsForDashboard;
