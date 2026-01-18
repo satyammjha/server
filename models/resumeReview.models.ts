@@ -3,6 +3,11 @@ import mongoose, { Schema } from 'mongoose';
 const ResumeReviewSchema = new Schema(
     {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        status: {
+            type: String,
+            enum: ['queued', 'processing', 'completed', 'failed'],
+            default: 'queued'
+        },
         overallScore: { type: Number },
         strengths: [{ type: String }],
         weaknesses: [{ type: String }],

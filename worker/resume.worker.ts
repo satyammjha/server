@@ -11,6 +11,7 @@ const resumeWorker = new Worker("resumeQueue",
         const prompt = analysisPrompt(resumeText);
         try {
             console.log("Sending prompt:", prompt);
+            await ResumeReviewModel.findOneAndUpdate({ userId: userId }, { status: "processing" }, { upsert: true });
             const result = await callGroq(prompt);
             console.log("Result from groq:", result);
 
@@ -22,12 +23,17 @@ const resumeWorker = new Worker("resumeQueue",
 
             await ResumeReviewModel.findOneAndUpdate(
                 { userId: userId },
-                { ...result },
+                { ...result, status: "completed" },
                 { upsert: true, new: true }
             );
 
         } catch (error) {
             console.log("Error in resumeText", error);
+            await ResumeReviewModel.findOneAndUpdate(
+                { userId: userId },
+                { status: "failed" },
+                { upsert: true, new: true }
+            );
         }
     },
     {
